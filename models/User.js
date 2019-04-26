@@ -4,10 +4,39 @@ module.exports = (sequelize, DataTypes) => {
     "User",
     {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-      firstName: DataTypes.TEXT,
-      lastName: DataTypes.TEXT,
-      emailAddress: DataTypes.TEXT,
-      password: DataTypes.TEXT
+      firstName: {
+        type: DataTypes.TEXT,
+        validate: {
+          notEmpty: {
+            msg: "First Name cannot be empty"
+          }
+        }
+      },
+      lastName: {
+        type: DataTypes.TEXT,
+        validate: {
+          notEmpty: {
+            msg: "Last Name cannot be empty"
+          }
+        }
+      },
+      emailAddress: {
+        type: DataTypes.TEXT,
+        validate: {
+          notEmpty: {
+            msg: "Email cannot be empty"
+          },
+          isEmail: {
+            msg: "Please input valid email"
+          }
+        }
+      },
+      password: {
+        type: DataTypes.TEXT,
+        validate: {
+          notEmpty: true
+        }
+      }
     },
     {}
   );

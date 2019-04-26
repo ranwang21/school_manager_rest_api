@@ -30,7 +30,9 @@ router.post("/", (req, res) => {
         });
       }
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      throw err;
+    });
 });
 
 module.exports = router;

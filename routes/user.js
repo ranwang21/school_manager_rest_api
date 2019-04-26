@@ -14,15 +14,23 @@ router.get("/", (req, res) => {
  * @POST Creates a user
  */
 router.post("/", (req, res) => {
-  User.findOne({ where: { emailAddress: req.body.emailAddress } }).then(
-    user => {
+  User.findOne({ where: { emailAddress: req.body.emailAddress } })
+    .then(user => {
       if (user) {
         res.json({ altert: "user exists already" });
       } else {
-        User.create(req.body).then(() => res.json({ alter: "created" }));
+        const newUser = {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          emailAddress: req.body.emailAddress,
+          password: req.body.password
+        };
+        User.create(newUser).then(() => {
+          res.status(201).end();
+        });
       }
-    }
-  );
+    })
+    .catch(err => console.error(err));
 });
 
 module.exports = router;

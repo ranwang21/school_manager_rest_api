@@ -25,8 +25,8 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   Course.associate = function(models) {
-    // this will create property userId by default
-    models.Course.belongsTo(models.User);
+    // set Course belong to User and give Course foreignKey named 'userId'
+    models.Course.belongsTo(models.User, { foreignKey: "userId" });
   };
   return Course;
 };

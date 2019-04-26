@@ -45,6 +45,7 @@ app.get("/", (req, res) => {
 // use routes
 app.use("/api", require("./routes/index"));
 app.use("/api/users", require("./routes/user"));
+app.use("/api/courses", require("./routes/course"));
 
 // send 404 if no other route matched
 app.use((req, res) => {
@@ -69,7 +70,7 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 5000;
 
 // syn models with database
-models.sync({ force: true }).then(() => {
+models.sync({ force: false }).then(() => {
   app.listen(port, () => {
     console.log(`Express server is listening on port ${port}`);
   });

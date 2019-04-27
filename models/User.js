@@ -50,6 +50,7 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   User.associate = function(models) {
+    // this creates a UserId as a foreign key
     models.User.hasMany(models.Course);
   };
   return User;

@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   Course.associate = function(models) {
     // set Course belong to User
-    models.Course.belongsTo(models.User, { foreignKey: "id" });
+    models.Course.belongsTo(models.User);
   };
   return Course;
 };

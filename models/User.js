@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       lastName: {
         type: DataTypes.TEXT,
+        allowNull: false,
         validate: {
           notEmpty: {
             msg: "Last Name cannot be empty"
@@ -43,7 +44,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false,
         validate: {
-          notEmpty: true
+          notEmpty: {
+            msg: "Please provide a password"
+          }
         }
       }
     },

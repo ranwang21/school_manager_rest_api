@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models").User;
 const Sequelize = require("sequelize");
 const authenticateUser = require("./auth");
+const bcryptjs = require("bcryptjs");
 
 /**
  * @GET Returns the currently authenticated user
@@ -17,8 +18,8 @@ router.get("/", authenticateUser, (req, res) => {
  */
 router.post("/", (req, res, next) => {
   // verify that the email provided isn't already associated with an existing user record
-  User.findOne({ where: { emailAddress: req.body.emailAddress } }).then(
-    user => {
+  User.findOne({ where: { emailAddress: req.body.emailAddress } })
+    .then(user => {
       if (user) {
         res.json({ error: "The email address exists already" });
       } else {
@@ -42,8 +43,11 @@ router.post("/", (req, res, next) => {
             next(err);
           });
       }
-    }
-  );
+    })
+    .catch(err => {
+      err.status = 400;
+      next(err);
+    });
 });
 
 module.exports = router;

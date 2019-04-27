@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Course = require("../models").Course;
+const authenticateUser = require("./auth");
 
 /**
  * @GET '/api/courses' Returns a list of courses
@@ -37,7 +38,7 @@ router.get("/:id", (req, res, next) => {
 /**
  * @POST Creates a course
  */
-router.post("/", (req, res, next) => {
+router.post("/", authenticateUser, (req, res, next) => {
   Course.findOne({ where: { title: req.body.title } })
     .then(course => {
       if (course) {
@@ -47,7 +48,9 @@ router.post("/", (req, res, next) => {
           title: req.body.title,
           description: req.body.description,
           estimatedTime: req.body.estimatedTime,
-          materialsNeeded: req.body.materialsNeeded
+          materialsNeeded: req.body.materialsNeeded,
+          // set userId as the currently logged user's id
+          UserId: req.currentUser.id
         };
         Course.create(newCourse)
           .then(() => {
@@ -68,19 +71,23 @@ router.post("/", (req, res, next) => {
 /**
  * @PUT Updates a course
  */
-router.put("/:id", (req, res) => {
+router.put("/:id", authenticateUser, (req, res) => {
   Course.findOne({ where: { id: req.params.id } })
     .then(course => {
       if (!course) {
         res.status(400);
         res.json({ error: "course not found" });
+        // add condition so that user can only edit its own course(s)
+      } else if (course.id !== req.currentUser.UserId) {
+        res.status(400);
+        res.json({ error: "You can only edit your own course" });
       } else {
         const updatedCourse = {
           title: req.body.title,
           description: req.body.description,
           estimatedTime: req.body.estimatedTime,
           materialsNeeded: req.body.materialsNeeded,
-          userId: req.body.userId
+          userId: req.currentUser.id
         };
         // returns a promise
         return course.update(updatedCourse);
@@ -96,7 +103,7 @@ router.put("/:id", (req, res) => {
 /**
  * @DELETE Deletes a course
  */
-router.delete("/:id", (req, res) => {
+router.delete("/:id", authenticateUser, (req, res) => {
   Course.findOne({ where: { id: req.params.id } })
     .then(course => {
       if (!course) {

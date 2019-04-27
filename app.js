@@ -70,7 +70,7 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 5000;
 
 // syn models with database
-models.sync({ force: false, logging: false }).then(() => {
+models.sync({ force: true, logging: false }).then(() => {
   app.listen(port, () => {
     console.log(`Express server is listening on port ${port}`);
   });

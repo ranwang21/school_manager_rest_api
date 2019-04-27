@@ -19,7 +19,7 @@ router.get("/", (req, res) => {
 /**
  * @GET '/api/courses/:id' returns the course
  */
-router.get("/:id", (req, res) => {
+router.get("/:id", (req, res, next) => {
   Course.findOne({ where: { id: req.params.id } })
     .then(course => {
       if (course) {
@@ -30,26 +30,38 @@ router.get("/:id", (req, res) => {
       }
     })
     .catch(err => {
-      console.error(err);
+      next(err);
     });
 });
 
 /**
  * @POST Creates a course
  */
-router.post("/", (req, res) => {
+router.post("/", (req, res, next) => {
   Course.findOne({ where: { title: req.body.title } })
     .then(course => {
       if (course) {
         res.json({ error: "course already exists" });
       } else {
-        Course.create(req.body).then(() => {
-          res.status(201).end();
-        });
+        const newCourse = {
+          title: req.body.title,
+          description: req.body.description,
+          estimatedTime: req.body.estimatedTime,
+          materialsNeeded: req.body.materialsNeeded
+        };
+        Course.create(newCourse)
+          .then(() => {
+            res.status(201).end();
+          })
+          .catch(err => {
+            err.status = 400;
+            next(err);
+          });
       }
     })
     .catch(err => {
-      console.error(err);
+      err.status = 400;
+      next(err);
     });
 });
 

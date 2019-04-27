@@ -11,8 +11,24 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true
       },
-      title: DataTypes.STRING,
-      description: DataTypes.TEXT,
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "title cannot be empty"
+          }
+        }
+      },
+      description: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "description cannot be empty"
+          }
+        }
+      },
       estimatedTime: {
         type: DataTypes.STRING,
         allowNull: true
@@ -25,8 +41,8 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   Course.associate = function(models) {
-    // set Course belong to User and give Course foreignKey named 'userId'
-    models.Course.belongsTo(models.User, { foreignKey: "userId" });
+    // set Course belong to User
+    models.Course.belongsTo(models.User, { foreignKey: "id" });
   };
   return Course;
 };

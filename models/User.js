@@ -6,10 +6,15 @@ module.exports = (sequelize, DataTypes) => {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
       firstName: {
         type: DataTypes.TEXT,
+        allowNull: false,
         validate: {
           notEmpty: {
             msg: "First Name cannot be empty"
-          }
+          },
+          // length between 2 and 16
+          len: [2, 16],
+          // only allow alphabetic input
+          isAlpha: true
         }
       },
       lastName: {
@@ -17,11 +22,14 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           notEmpty: {
             msg: "Last Name cannot be empty"
-          }
+          },
+          len: [2, 16],
+          isAlpha: true
         }
       },
       emailAddress: {
         type: DataTypes.TEXT,
+        allowNull: false,
         validate: {
           notEmpty: {
             msg: "Email cannot be empty"
@@ -33,6 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       password: {
         type: DataTypes.TEXT,
+        allowNull: false,
         validate: {
           notEmpty: true
         }

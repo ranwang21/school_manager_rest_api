@@ -2,11 +2,12 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models").User;
 const Sequelize = require("sequelize");
+const authenticateUser = require("./auth");
 
 /**
  * @GET Returns the currently authenticated user
  */
-router.get("/", (req, res) => {
+router.get("/", authenticateUser, (req, res) => {
   res.status(200);
   res.json({ user: "user1 logged in" });
 });

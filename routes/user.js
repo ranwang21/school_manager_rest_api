@@ -10,7 +10,11 @@ const bcryptjs = require("bcryptjs");
  */
 router.get("/", authenticateUser, (req, res) => {
   res.status(200);
-  res.json({ user: "user1 logged in" });
+  res.json({
+    firstName: req.currentUser.emailAddress,
+    lastName: req.currentUser.lastName,
+    emailAddress: req.currentUser.emailAddress
+  });
 });
 
 /**
@@ -21,6 +25,7 @@ router.post("/", (req, res, next) => {
   User.findOne({ where: { emailAddress: req.body.emailAddress } })
     .then(user => {
       if (user) {
+        res.status(400);
         res.json({ error: "The email address exists already" });
       } else {
         const newUser = {
@@ -38,7 +43,7 @@ router.post("/", (req, res, next) => {
           })
           // catch validation errors
           .catch(err => {
-            // set err.status to 400 then send err to globla error handler
+            // set err.status to 400 then send err to global error handler
             err.status = 400;
             next(err);
           });

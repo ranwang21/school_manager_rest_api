@@ -32,10 +32,12 @@ module.exports = (req, res, next) => {
       } else {
         // if not matching user found, tell the client
         message = "Email address not found";
+        res.status(401);
         res.json({ message: message });
       }
     });
   } else {
+    // return 401 and ask for providing credentials
     res.status(401);
     message = "Please provide login credentials";
     res.json({ message: message });

@@ -7,7 +7,8 @@ const authenticateUser = require("./auth");
  * @GET '/api/courses' Returns a list of courses
  */
 router.get("/", (req, res) => {
-  Course.findAll()
+  // exclude 'createdAt' and 'updatedAt'
+  Course.findAll({ attributes: { exclude: ["createdAt", "updatedAt"] } })
     .then(courses => {
       res.status(200);
       res.json({ courses });
@@ -21,7 +22,11 @@ router.get("/", (req, res) => {
  * @GET '/api/courses/:id' returns the course
  */
 router.get("/:id", (req, res, next) => {
-  Course.findOne({ where: { id: req.params.id } })
+  Course.findOne({
+    where: { id: req.params.id },
+    // exclude 'createdAt' and 'updatedAt'
+    attributes: { exclude: ["createdAt", "updatedAt"] }
+  })
     .then(course => {
       if (course) {
         res.status(200);
@@ -79,7 +84,7 @@ router.put("/:id", authenticateUser, (req, res) => {
         res.json({ error: "course not found" });
         // add condition so that user can only edit its own course(s)
       } else if (course.id !== req.currentUser.UserId) {
-        res.status(400);
+        res.status(403);
         res.json({ error: "You can only edit your own course" });
       } else {
         const updatedCourse = {
@@ -109,6 +114,9 @@ router.delete("/:id", authenticateUser, (req, res) => {
       if (!course) {
         res.status(400);
         res.json({ error: "course no found" });
+      } else if (course.id !== req.currentUser.UserId) {
+        res.status(403);
+        res.json({ error: "You can only delete your own course" });
       } else {
         return course.destroy();
       }

@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
       description: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
         validate: {
           notEmpty: {
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   Course.associate = function(models) {
-    // set Course belong to User
+    // set Course belong to User, this will create a foreign ID linking to the User
     models.Course.belongsTo(models.User);
   };
   return Course;

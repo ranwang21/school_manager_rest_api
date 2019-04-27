@@ -15,10 +15,11 @@ router.get("/", (req, res) => {
  * @POST Creates a user
  */
 router.post("/", (req, res, next) => {
+  // verify that the email provided isn't already associated with an existing user record
   User.findOne({ where: { emailAddress: req.body.emailAddress } }).then(
     user => {
       if (user) {
-        res.json({ altert: "user exists already" });
+        res.json({ error: "The email address exists already" });
       } else {
         const newUser = {
           firstName: req.body.firstName,
@@ -26,6 +27,9 @@ router.post("/", (req, res, next) => {
           emailAddress: req.body.emailAddress,
           password: req.body.password
         };
+        // Hash the password
+        newUser.password = bcryptjs.hashSync(newUser.password);
+        // Create the user
         User.create(newUser)
           .then(() => {
             res.status(201).end();

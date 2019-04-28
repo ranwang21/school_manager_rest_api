@@ -1,16 +1,25 @@
+# School Manager REST API
 
-# Full Stack JavaScript Techdegree v2 - REST API Project
+This REST API allows creating, reading, updating, and deleting courses / users with user Authentication / Authorization.
+This REST API is constructed for the **[Full Stack School Manager APP]**(https://github.com/ranwang21/full_stack_react_express_app) (under construction). But you can make request to this API as well since the API allows CORS.
 
-## Overview of the Provided Project Files
+To edit or delete a course at `/course/:id`, you need provide user credentials.
 
-We've supplied the following files for you to use: 
+You can create a user account at POST `/users` with below infomation in json format:
 
-* The `seed` folder contains a starting set of data for your database in the form of a JSON file (`data.json`) and a collection of files (`context.js`, `database.js`, and `index.js`) that can be used to create your app's database and populate it with data (we'll explain how to do that below).
-* We've included a `.gitignore` file to ensure that the `node_modules` folder doesn't get pushed to your GitHub repo.
-* The `app.js` file configures Express to serve a simple REST API. We've also configured the `morgan` npm package to log HTTP requests/responses to the console. You'll update this file with the routes for the API. You'll update this file with the routes for the API.
-* The `nodemon.js` file configures the nodemon Node.js module, which we are using to run your REST API.
-* The `package.json` file (and the associated `package-lock.json` file) contain the project's npm configuration, which includes the project's dependencies.
-* The `RESTAPI.postman_collection.json` file is a collection of Postman requests that you can use to test and explore your REST API.
+- firstName (required)
+- lastName (required)
+- password (required)
+
+You can also create a course when logged in, provide server with below information in json format:
+
+- firstName (required)
+- lastName (required)
+- password (required)
+- estimatedTime (optional)
+- materialsNeeded (optional)
+
+You can update or delete a course at PUT / DELETE `/courses/:id`. But you can only do so with the course(s) that you created.
 
 ## Getting Started
 
@@ -23,16 +32,12 @@ npm install
 
 ```
 
-Second, seed the SQLite database.
-
-```
-npm run seed
-```
-
-And lastly, start the application.
+Second, start the application.
 
 ```
 npm start
 ```
 
-To test the Express server, browse to the URL [http://localhost:5000/](http://localhost:5000/).
+## Notes
+
+Please do not run `npm run seed`, this script is provided at project initiation, doing this again may lead to database column dublicates.

@@ -11,6 +11,7 @@ const bcryptjs = require("bcryptjs");
 router.get("/", authenticateUser, (req, res) => {
   res.status(200);
   res.json({
+    id: req.currentUser.id,
     firstName: req.currentUser.emailAddress,
     lastName: req.currentUser.lastName,
     emailAddress: req.currentUser.emailAddress

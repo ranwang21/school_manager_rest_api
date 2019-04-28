@@ -2,13 +2,30 @@ const express = require("express");
 const router = express.Router();
 const Course = require("../models").Course;
 const authenticateUser = require("./auth");
+const User = require("../models").User;
 
 /**
  * @GET '/api/courses' Returns a list of courses
  */
 router.get("/", (req, res) => {
   // exclude 'createdAt' and 'updatedAt'
-  Course.findAll({ attributes: { exclude: ["createdAt", "updatedAt"] } })
+  Course.findAll({
+    // only send needed attributes
+    attributes: [
+      "id",
+      "title",
+      "description",
+      "estimatedTime",
+      "materialsNeeded",
+      "userId"
+    ],
+    include: [
+      {
+        model: User,
+        attributes: ["id", "firstName", "lastName", "emailAddress"]
+      }
+    ]
+  })
     .then(courses => {
       res.status(200);
       res.json({ courses });
@@ -24,8 +41,21 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res, next) => {
   Course.findOne({
     where: { id: req.params.id },
-    // exclude 'createdAt' and 'updatedAt'
-    attributes: { exclude: ["createdAt", "updatedAt"] }
+    // exclude 'createdAt' and 'updatedAt', include the user who owns the course
+    attributes: [
+      "id",
+      "title",
+      "description",
+      "estimatedTime",
+      "materialsNeeded",
+      "userId"
+    ],
+    include: [
+      {
+        model: User,
+        attributes: ["id", "firstName", "lastName", "emailAddress"]
+      }
+    ]
   })
     .then(course => {
       if (course) {
@@ -83,8 +113,7 @@ router.put("/:id", authenticateUser, (req, res) => {
         res.status(400);
         res.json({ error: "course not found" });
         // add condition so that user can only edit its own course(s)
-      } else if (course.id !== req.currentUser.UserId) {
-        res.status(403);
+      } else if (course.userId !== req.currentUser.id) {
         res.json({ error: "You can only edit your own course" });
       } else {
         const updatedCourse = {
@@ -94,8 +123,8 @@ router.put("/:id", authenticateUser, (req, res) => {
           materialsNeeded: req.body.materialsNeeded,
           userId: req.currentUser.id
         };
-        // returns a promise
-        return course.update(updatedCourse);
+        // update the course, returns a promise
+        course.update(updatedCourse);
       }
     })
     // when done, set the status and end the request
@@ -114,7 +143,7 @@ router.delete("/:id", authenticateUser, (req, res) => {
       if (!course) {
         res.status(400);
         res.json({ error: "course no found" });
-      } else if (course.id !== req.currentUser.UserId) {
+      } else if (course.userId !== req.currentUser.id) {
         res.status(403);
         res.json({ error: "You can only delete your own course" });
       } else {

@@ -147,7 +147,7 @@ router.delete("/:id", authenticateUser, (req, res) => {
         res.status(403);
         res.json({ error: "You can only delete your own course" });
       } else {
-        return course.destroy();
+        course.destroy();
       }
     })
     .then(() => {

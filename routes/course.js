@@ -114,6 +114,7 @@ router.put("/:id", authenticateUser, (req, res) => {
         res.json({ error: "course not found" });
         // add condition so that user can only edit its own course(s)
       } else if (course.userId !== req.currentUser.id) {
+        res.status(403);
         res.json({ error: "You can only edit your own course" });
       } else {
         const updatedCourse = {

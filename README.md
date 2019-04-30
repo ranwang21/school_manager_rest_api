@@ -1,11 +1,8 @@
 # School Manager REST API
 
 This REST API allows creating, reading, updating, and deleting courses / users with user Authentication / Authorization.
-<<<<<<< HEAD
 This REST API is constructed for the [Full Stack School Manager APP](https://github.com/ranwang21/full_stack_react_express_app) (under construction). But you can make request to this API as well since the API allows CORS.
-=======
 This REST API is constructed for the [Full Stack School Manager APP](https://github.com/ranwang21/full_stack_react_express_app) (currently under construction). But you can make request to this API as well since the API allows CORS.
->>>>>>> f88b83f8eebc6f2c39138a38cf8f906619599f03
 
 To edit or delete a course at `/course/:id`, you need provide user credentials.
 
@@ -36,12 +33,13 @@ npm install
 
 ```
 
-Second, start the application.
+Second, run database seed.
 
+```
+npm run seed
+```
+
+Finally, start the API
 ```
 npm start
 ```
-
-## Notes
-
-Please do not run `npm run seed`, this script is provided at project initiation, doing this again may lead to database column dublicates.

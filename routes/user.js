@@ -35,8 +35,10 @@ router.post("/", (req, res, next) => {
           emailAddress: req.body.emailAddress,
           password: req.body.password
         };
-        // Hash the password
-        newUser.password = bcryptjs.hashSync(newUser.password);
+        // Hash the password if exists
+        if (newUser.password) {
+          newUser.password = bcryptjs.hashSync(newUser.password);
+        }
         // Create the user
         User.create(newUser)
           .then(() => {
